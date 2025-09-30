@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { ChefHat, Sparkles, DollarSign, Refrigerator, Loader2 } from 'lucide-react';
+import { ChefHat, Sparkles, DollarSign, Refrigerator, Loader2, Calendar, MapPin, Users, Mail } from 'lucide-react';
+import Link from 'next/link';
 
 interface Recipe {
   name: string;
@@ -19,6 +20,14 @@ export default function VibesCookingApp() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  
+  // Waitlist form state
+  const [email, setEmail] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [city, setCity] = useState('');
+  const [waitlistLoading, setWaitlistLoading] = useState(false);
+  const [waitlistSuccess, setWaitlistSuccess] = useState(false);
+  const [waitlistError, setWaitlistError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,8 +58,69 @@ export default function VibesCookingApp() {
     }
   };
 
+  const handleWaitlistSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setWaitlistLoading(true);
+    setWaitlistError('');
+    setWaitlistSuccess(false);
+
+    try {
+      const response = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, nickname, city }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to join waitlist');
+      }
+
+      setWaitlistSuccess(true);
+      setEmail('');
+      setNickname('');
+      setCity('');
+    } catch (err) {
+      setWaitlistError('Failed to join waitlist. Please try again.');
+      console.error(err);
+    } finally {
+      setWaitlistLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50">
+      {/* Event Banner */}
+      <div className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 text-white py-6 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="bg-white/20 backdrop-blur-sm p-3 rounded-2xl">
+                <Sparkles className="w-8 h-8" />
+              </div>
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold mb-1">Windsurf Vibe Battle</h2>
+                <p className="text-white/90 text-sm md:text-base">The ultimate cooking competition where vibes meet flavor</p>
+              </div>
+            </div>
+            <div className="flex gap-6 text-sm md:text-base">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-5 h-5" />
+                <span>Coming Soon</span>
+              </div>
+              <Link 
+                href="/participants"
+                className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-all backdrop-blur-sm"
+              >
+                <Users className="w-5 h-5" />
+                <span>View Participants</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-orange-100 sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4">
@@ -207,8 +277,107 @@ export default function VibesCookingApp() {
         )}
       </main>
 
+      {/* Waitlist Section */}
+      <section className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 py-16 px-4 mt-16">
+        <div className="container mx-auto max-w-2xl">
+          <div className="text-center mb-8">
+            <h2 className="text-4xl font-bold text-white mb-3">Join the Vibe Battle!</h2>
+            <p className="text-white/90 text-lg">Sign up for the waitlist and be the first to compete</p>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-2xl p-8">
+            {waitlistSuccess ? (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Sparkles className="w-8 h-8 text-green-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-2">You&apos;re In!</h3>
+                <p className="text-gray-600">Welcome to the Windsurf Vibe Battle. We&apos;ll notify you when the competition begins!</p>
+                <button
+                  onClick={() => setWaitlistSuccess(false)}
+                  className="mt-6 text-purple-600 hover:text-purple-700 font-semibold"
+                >
+                  Register another person
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleWaitlistSubmit} className="space-y-6">
+                <div>
+                  <label className="flex items-center gap-2 text-lg font-semibold text-gray-700 mb-3">
+                    <Mail className="w-5 h-5 text-purple-600" />
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-200 transition-all"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-2 text-lg font-semibold text-gray-700 mb-3">
+                    <Users className="w-5 h-5 text-pink-600" />
+                    Nickname
+                  </label>
+                  <input
+                    type="text"
+                    value={nickname}
+                    onChange={(e) => setNickname(e.target.value)}
+                    placeholder="Your chef name"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-200 transition-all"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-2 text-lg font-semibold text-gray-700 mb-3">
+                    <MapPin className="w-5 h-5 text-orange-600" />
+                    City
+                  </label>
+                  <input
+                    type="text"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    placeholder="Where you cook from"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-200 transition-all"
+                    required
+                  />
+                </div>
+
+                {waitlistError && (
+                  <div className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+                    {waitlistError}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={waitlistLoading}
+                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 rounded-xl font-semibold text-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {waitlistLoading ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Joining...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-5 h-5" />
+                      Join Waitlist
+                    </>
+                  )}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
-      <footer className="text-center py-8 text-gray-500 text-sm">
+      <footer className="text-center py-8 text-gray-500 text-sm bg-white/50">
         <p>Made with ❤️ for food lovers everywhere</p>
       </footer>
     </div>
