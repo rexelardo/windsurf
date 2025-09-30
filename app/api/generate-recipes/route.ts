@@ -67,7 +67,7 @@ Make the recipes practical, delicious, and perfectly matched to the mood. Be cre
     }
 
     // Parse the response
-    let parsedResponse = JSON.parse(responseText);
+    const parsedResponse = JSON.parse(responseText);
     
     // Handle different response formats
     let recipes = parsedResponse.recipes || parsedResponse;

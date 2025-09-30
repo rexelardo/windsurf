@@ -73,7 +73,7 @@ export default function VibesCookingApp() {
             <div>
               <label className="flex items-center gap-2 text-lg font-semibold text-gray-700 mb-3">
                 <Refrigerator className="w-5 h-5 text-orange-500" />
-                What's in your fridge?
+                What&apos;s in your fridge?
               </label>
               <textarea
                 value={ingredients}
@@ -89,7 +89,7 @@ export default function VibesCookingApp() {
             <div>
               <label className="flex items-center gap-2 text-lg font-semibold text-gray-700 mb-3">
                 <Sparkles className="w-5 h-5 text-pink-500" />
-                What's your vibe?
+                What&apos;s your vibe?
               </label>
               <input
                 type="text"
@@ -105,7 +105,7 @@ export default function VibesCookingApp() {
             <div>
               <label className="flex items-center gap-2 text-lg font-semibold text-gray-700 mb-3">
                 <DollarSign className="w-5 h-5 text-green-500" />
-                What's your budget?
+                What&apos;s your budget?
               </label>
               <input
                 type="text"
