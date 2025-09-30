@@ -1,9 +1,16 @@
-# 🍳 Vibes Cooking
+# 🍳 Vibes Cooking - Windsurf Vibe Battle
 
-A creative cooking app that generates personalized recipes based on your ingredients, mood, and budget!
+A creative cooking app featuring AI-generated recipes and the **Windsurf Vibe Battle** competition platform!
 
 ## ✨ Features
 
+### 🎯 Windsurf Vibe Battle
+- **Event Banner**: Eye-catching event information at the top
+- **Waitlist Form**: Collect participant info (email, nickname, city)
+- **Participants Page**: View all registered battle participants
+- **Supabase Integration**: Real-time database for participant management
+
+### 🍳 Recipe Generator
 - **Ingredient-Based**: Tell us what's in your fridge
 - **Vibe-Matched**: Get recipes that match your mood (cozy, healthy, fancy, quick, etc.)
 - **Budget-Aware**: Recipes tailored to your budget
@@ -16,6 +23,7 @@ A creative cooking app that generates personalized recipes based on your ingredi
 
 - Node.js 18+ installed
 - OpenAI API key ([Get one here](https://platform.openai.com/api-keys))
+- Supabase account ([Sign up here](https://supabase.com))
 
 ### Installation
 
@@ -25,23 +33,31 @@ A creative cooking app that generates personalized recipes based on your ingredi
 npm install
 ```
 
-2. Set up your environment variables:
+2. Set up Supabase database:
+
+Follow the detailed instructions in [SUPABASE_SETUP.md](./SUPABASE_SETUP.md) to:
+- Create the participants table
+- Get your Supabase credentials
+
+3. Set up your environment variables:
 
 ```bash
 # Copy the example env file
 cp env.example .env.local
 
-# Edit .env.local and add your OpenAI API key
+# Edit .env.local and add your keys
 OPENAI_API_KEY=your_openai_api_key_here
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-3. Run the development server:
+4. Run the development server:
 
 ```bash
 npm run dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ## 📦 Deploy to Vercel
 
@@ -49,7 +65,10 @@ The easiest way to deploy is using Vercel:
 
 1. Push your code to GitHub
 2. Import your repository on [Vercel](https://vercel.com/new)
-3. Add your `OPENAI_API_KEY` environment variable in Vercel project settings
+3. Add environment variables in Vercel project settings:
+   - `OPENAI_API_KEY`
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 4. Deploy! 🎉
 
 Alternatively, use the Vercel CLI:
@@ -65,7 +84,9 @@ vercel --prod
 - **Styling**: Tailwind CSS
 - **Icons**: Lucide React
 - **AI**: OpenAI GPT-4
+- **Database**: Supabase (PostgreSQL)
 - **Language**: TypeScript
+- **Deployment**: Vercel
 
 ## 📝 How It Works
 
